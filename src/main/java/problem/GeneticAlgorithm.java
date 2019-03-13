@@ -1,17 +1,16 @@
 package problem;
 
+import generator.PopulationGenerator;
 import loader.Loader;
-import model.Item;
-import model.Knapsack;
-import model.KnapsackProblemSolution;
-import model.Solution;
+import model.*;
 import model.comparators.HigherProfitWeightRatioComparator;
 import utils.MathUtils;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by Cinek on 10.03.2019.
@@ -31,7 +30,15 @@ public class GeneticAlgorithm {
         try {
             problem = loader.loadProblemData("C:\\Users\\Cinek\\Documents\\projektyJAVA\\ttp_problem_ga\\src\\main\\resources\\trivial_0.ttp");
             System.out.println("problem data loaded");
+            Solution exampleSolution = new Solution(10,asList(1,2,3,5,4,6,7,8,9,10));
             GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem);
+            System.out.println(geneticAlgorithm.functionF(exampleSolution));
+
+            Population population = PopulationGenerator.generatePopulation(0, 25, problem.getDimension());
+            for (Solution solution : population.getSolutions())
+            {
+                System.out.println(solution.getCitiesIndexes());
+            }
 
 
 
@@ -66,8 +73,10 @@ public class GeneticAlgorithm {
 
     private double calculateTForSingleStep(int fromCityIndex, int toCityIndex, Knapsack knapsack, KnapsackProblemSolution knapsackProblemSolution)
     {
-        List<Item> itemsTaken = knapsackProblemSolution.getItemsForCity(fromCityIndex);
-        knapsack.addItems(itemsTaken);
+        List<Item> itemsTaken = problem.getAllItems();
+        if (itemsTaken != null) {
+            knapsack.addItems(itemsTaken);
+        }
 
         double distance = MathUtils.calculateDistanceBetweenTwoCities(problem.getCities().get(fromCityIndex - 1), problem.getCities().get(toCityIndex- 1));
         float vc = problem.getMaxSpeed() - knapsack.getCurrentWeight() * (problem.getMaxSpeed() - problem.getMinSpeed())/ knapsack.getCapacity();
