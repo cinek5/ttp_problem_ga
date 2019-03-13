@@ -3,11 +3,9 @@ package problem;
 import generator.PopulationGenerator;
 import loader.Loader;
 import model.*;
-import model.comparators.HigherProfitWeightRatioComparator;
 import utils.MathUtils;
 
 import java.io.FileNotFoundException;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -34,11 +32,8 @@ public class GeneticAlgorithm {
             GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem);
             System.out.println(geneticAlgorithm.functionF(exampleSolution));
 
-            Population population = PopulationGenerator.generatePopulation(0, 25, problem.getDimension());
-            for (Solution solution : population.getSolutions())
-            {
-                System.out.println(solution.getCitiesIndexes());
-            }
+            Population population = PopulationGenerator.generatePopulation(0, 5041, 439);
+            System.out.println(population.getSolutions().size());
 
 
 
@@ -48,7 +43,7 @@ public class GeneticAlgorithm {
     }
 
     public double functionF(Solution solution) {
-        KnapsackProblemSolution knapsackProblemSolution = solveKnapsackProblemGreedy(solution);
+        KnapsackProblemSolution knapsackProblemSolution = solveKnapsackProblemGreedy();
         Knapsack knapsack = new Knapsack(problem.getKnapsackCapacity());
         double tsum = 0;
         List<Integer> cityIndexes = solution.getCitiesIndexes();
@@ -84,10 +79,9 @@ public class GeneticAlgorithm {
         return distance/vc;
     }
 
-    public KnapsackProblemSolution solveKnapsackProblemGreedy(Solution solution) {
+    public KnapsackProblemSolution solveKnapsackProblemGreedy() {
         Knapsack knapsack = new Knapsack(problem.getKnapsackCapacity());
-        List<Item> items = problem.getItemsInCities(solution);
-        Collections.sort(items, new HigherProfitWeightRatioComparator());
+        List<Item> items = problem.getItemsGreedySorted();
         for (Item item : items) {
             knapsack.addItem(item);
         }

@@ -29,4 +29,19 @@ public class Solution {
     public void setCitiesIndexes(List<Integer> citiesIndexes) {
         this.citiesIndexes = citiesIndexes;
     }
+
+    @Override
+    public int hashCode() {
+        return citiesIndexes.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Solution)) return false;
+
+        Solution solution = (Solution) o;
+
+        return citiesIndexes.equals(solution.citiesIndexes);
+    }
 }

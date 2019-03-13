@@ -11,6 +11,13 @@ import java.util.List;
  */
 public class RandomSolutionGenerator {
 
+    public List<Integer> generaterRandomList(int dimension)
+    {
+        List<Integer> baseList = generateBaseList(dimension);
+        Collections.shuffle(baseList);
+        return baseList;
+
+    }
     public Solution generate(int dimension)
     {
         List<Integer>  baseList = generateBaseList(dimension);

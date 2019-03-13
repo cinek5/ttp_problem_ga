@@ -17,13 +17,28 @@ public class PopulationGenerator {
     {
         Set<Solution> solutions = new HashSet<>(numberOfSolutions);
 
+
         RandomSolutionGenerator randomSolutionGenerator = new RandomSolutionGenerator();
 
-        while( solutions.size() != numberOfSolutions)
+        while (solutions.size() != numberOfSolutions)
         {
             solutions.add(randomSolutionGenerator.generate(dimension));
         }
 
+
         return new Population(index, new ArrayList<>(solutions));
+    }
+    public static HashSet<List<Integer>> generatePopulationSet(int numberOfSolutions, int dimension)
+    {
+        RandomSolutionGenerator randomSolutionGenerator = new RandomSolutionGenerator();
+
+        randomSolutionGenerator.generaterRandomList(dimension);
+        HashSet<List<Integer>> solutions = new HashSet<>();
+
+        while( solutions.size() != numberOfSolutions)
+        {
+            solutions.add(randomSolutionGenerator.generaterRandomList(dimension));
+        }
+        return solutions;
     }
 }

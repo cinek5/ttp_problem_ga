@@ -4,8 +4,11 @@ import model.CityNode;
 import model.Item;
 import model.Knapsack;
 import model.Solution;
+import model.comparators.HigherProfitWeightRatioComparator;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,6 +17,7 @@ import java.util.List;
 public class Problem {
     private List<CityNode> cities;
     private List<Item> allItems;
+    private List<Item> itemsGreedySorted;
     private int knapsackCapacity;
     private int dimension;
     private int numberOfItems;
@@ -28,6 +32,16 @@ public class Problem {
         this.maxSpeed = maxSpeed;
         this.knapsackCapacity = knapsackCapacity;
         this.allItems = allItems;
+        this.itemsGreedySorted = new ArrayList<>(allItems);
+        Collections.sort(itemsGreedySorted, new HigherProfitWeightRatioComparator());
+    }
+
+    public List<Item> getItemsGreedySorted() {
+        return itemsGreedySorted;
+    }
+
+    public void setItemsGreedySorted(List<Item> itemsGreedySorted) {
+        this.itemsGreedySorted = itemsGreedySorted;
     }
 
     public List<Item> getAllItems() {
