@@ -42,6 +42,14 @@ public class GeneticAlgorithm {
         }
     }
 
+    public void evaluate(Population population)
+    {
+        for (Solution solution: population.getSolutions())
+        {
+            solution.setFitness(functionF(solution));
+        }
+    }
+
     public double functionF(Solution solution) {
         KnapsackProblemSolution knapsackProblemSolution = solveKnapsackProblemGreedy();
         Knapsack knapsack = new Knapsack(problem.getKnapsackCapacity());
@@ -68,7 +76,7 @@ public class GeneticAlgorithm {
 
     private double calculateTForSingleStep(int fromCityIndex, int toCityIndex, Knapsack knapsack, KnapsackProblemSolution knapsackProblemSolution)
     {
-        List<Item> itemsTaken = problem.getAllItems();
+        List<Item> itemsTaken = knapsackProblemSolution.getItemsForCity(fromCityIndex);
         if (itemsTaken != null) {
             knapsack.addItems(itemsTaken);
         }

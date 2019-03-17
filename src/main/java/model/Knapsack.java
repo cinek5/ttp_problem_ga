@@ -38,6 +38,7 @@ public class Knapsack {
         if (item.getWeight() + currentWeight <= capacity )
         {
             items.add(item);
+            currentWeight+=item.getWeight();
             return true;
         }
         return false;

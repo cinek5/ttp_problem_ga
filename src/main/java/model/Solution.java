@@ -8,10 +8,19 @@ import java.util.List;
 public class Solution {
     private int dimension;
     private List<Integer> citiesIndexes;
+    private double fitness;
 
     public Solution(int dimension, List<Integer> citiesIndexes) {
         this.dimension = dimension;
         this.citiesIndexes = citiesIndexes;
+    }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
     }
 
     public int getDimension() {
