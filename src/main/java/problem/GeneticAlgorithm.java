@@ -53,7 +53,7 @@ public class GeneticAlgorithm {
         try {
             problem = loader.loadProblemData("C:\\Users\\Cinek\\Documents\\projektyJAVA\\ttp_problem_ga\\src\\main\\resources\\"+Config.FILE_NAME+".ttp");
             System.out.println("problem data loaded");
-            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem, new SwapMutation(), new PMXCrossover(), new RouletteSelectionStrategy());
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem, Config.MUTATION_OPERATOR, Config.CROSSOVER_OPERATOR, Config.SELECTION_STRATEGY);
             GeneticAlgorithmChart geneticAlgorithmChart = new GeneticAlgorithmChart("GA", Config.FILE_NAME);
             geneticAlgorithm.setChart(geneticAlgorithmChart);
 
@@ -100,8 +100,9 @@ public class GeneticAlgorithm {
                 double rand = Math.random();
                 if (rand<= CROSSOVER_PROB )
                 {
-                    int randIndex = MathUtils.randInt(0, POPULATION_SIZE);
-                    Solution parent2 = population.getSolutions().get(randIndex);
+                    //int randIndex = MathUtils.randInt(0, POPULATION_SIZE);
+                   // Solution parent2 = population.getSolutions().get(randIndex);
+                    Solution parent2 = selectionStrategy.selection(population);
 
                     result = crossoverOperator.crossover(parent1, parent2);
                 }
@@ -184,6 +185,7 @@ public class GeneticAlgorithm {
 
     public double functionG(Solution solution, KnapsackProblemSolution knapsackProblemSolution)
     {
+
         return knapsackProblemSolution.getKnapsackValue() - functionF(solution, knapsackProblemSolution);
     }
 
