@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,6 +16,7 @@ public class Solution {
         this.dimension = dimension;
         this.citiesIndexes = citiesIndexes;
     }
+    private Solution() {}
 
     public double getFitness() {
         return fitness;
@@ -52,5 +55,14 @@ public class Solution {
         Solution solution = (Solution) o;
 
         return citiesIndexes.equals(solution.citiesIndexes);
+    }
+
+    public Solution getCopy()
+    {
+        Solution solution = new Solution();
+        solution.setDimension(dimension);
+        List<Integer> indexes = new ArrayList<>(citiesIndexes);
+        solution.setCitiesIndexes(indexes);
+        return solution;
     }
 }
