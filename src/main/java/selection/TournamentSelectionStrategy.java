@@ -22,7 +22,7 @@ public class TournamentSelectionStrategy implements SelectionStrategy {
         Solution best = null;
         for (Integer i : indices)
         {
-            Solution solution = population.getSolutions().get(0);
+            Solution solution = population.getSolutions().get(i);
             if (best == null)
             {
                 best = solution;
