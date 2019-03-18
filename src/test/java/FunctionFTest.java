@@ -31,9 +31,9 @@ public class FunctionFTest {
         Problem problem = new Problem(asList(cityNode1, cityNode2, cityNode3), 3 , 3, 0.1f, 1 , 25,
                 asList(item1, item2, item3));
 
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem, null ,null, null);
         Solution solution = new Solution(3, asList(1,2,3));
-        double calculatedF = geneticAlgorithm.functionF(solution);
+        double calculatedF = geneticAlgorithm.functionF(solution, geneticAlgorithm.solveKnapsackProblemGreedy());
 
         assertEquals(38.70, calculatedF, 0.01);
 

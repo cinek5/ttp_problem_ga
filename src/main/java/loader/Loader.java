@@ -63,7 +63,7 @@ public class Loader {
             Item item = new Item(index, profit, weight, cityIndex);
             allItems.add(item);
 
-            citiesByIndex.get(index).addItem(item);
+            citiesByIndex.get(cityIndex).addItem(item);
             reader.nextLine();
         }
 

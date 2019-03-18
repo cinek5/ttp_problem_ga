@@ -10,11 +10,28 @@ import java.util.Map;
  */
 public class KnapsackProblemSolution {
     private Map<Integer, List<Item>> itemsTakenByCityIndex;
+    private double knapsackValue;
 
     public KnapsackProblemSolution(List<Item> itemsTaken) {
         itemsTakenByCityIndex = createItemsTakenByCityIndexMap(itemsTaken);
+        knapsackValue = computeKnapsackValue(itemsTaken);
 
     }
+
+    public double getKnapsackValue() {
+        return knapsackValue;
+    }
+
+    private double computeKnapsackValue(List<Item> items)
+    {
+        double sum = 0;
+        for (Item item : items)
+        {
+            sum += item.getProfit();
+        }
+        return sum;
+    }
+
 
     private Map<Integer, List<Item>> createItemsTakenByCityIndexMap(List<Item> itemsTaken)
     {

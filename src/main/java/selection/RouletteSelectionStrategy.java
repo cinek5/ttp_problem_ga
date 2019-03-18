@@ -13,12 +13,15 @@ public class RouletteSelectionStrategy implements SelectionStrategy {
     @Override
     public Solution selection(Population population) {
 
-        double sumOfFitness = sumOfFitness(population);
+        double minFitness =  minFitness(population);
+        double sumOfFitness = sumOfFitness(population, minFitness);
         double rand = MathUtils.randDouble(0, sumOfFitness);
+
         float partialSum = 0;
         for (Solution solution : population.getSolutions() )
         {
-            partialSum+= solution.getFitness();
+            double fitness =solution.getFitness() - minFitness;
+            partialSum+= fitness;
             if (partialSum>=rand)
             {
                 return solution;
@@ -27,12 +30,31 @@ public class RouletteSelectionStrategy implements SelectionStrategy {
         return null;
     }
 
-    private double sumOfFitness(Population population)
+    private double minFitness(Population population)
+    {
+        Solution solution0  = population.getSolutions().get(0);
+        double minFitness = solution0.getFitness();
+        for (int i=1; i<population.getSolutions().size(); i++)
+        {
+            double fitness = population.getSolutions().get(i).getFitness();
+            if (fitness<minFitness)
+            {
+                minFitness = fitness;
+            }
+
+        }
+
+        return  minFitness;
+    }
+
+
+
+    private double sumOfFitness(Population population, double minFitness)
     {
         double sum = 0;
         for (Solution solution : population.getSolutions() )
         {
-            sum+=solution.getFitness();
+            sum+=(solution.getFitness() - minFitness);
         }
         return sum;
     }
