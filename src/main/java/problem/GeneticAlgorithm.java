@@ -1,5 +1,6 @@
 package problem;
 
+import charts.GeneticAlgorithmChart;
 import com.sun.org.apache.bcel.internal.generic.POP;
 import config.Config;
 import crossover.CrossoverOperator;
@@ -9,6 +10,7 @@ import loader.Loader;
 import model.*;
 import mutation.MutationOperator;
 import mutation.SwapMutation;
+import org.jfree.ui.RefineryUtilities;
 import selection.RouletteSelectionStrategy;
 import selection.SelectionStrategy;
 import utils.MathUtils;
@@ -31,6 +33,7 @@ public class GeneticAlgorithm {
     private MutationOperator mutationOperator;
     private CrossoverOperator crossoverOperator;
     private SelectionStrategy selectionStrategy;
+    private GeneticAlgorithmChart chart;
 
     public GeneticAlgorithm(Problem problem, MutationOperator mutationOperator, CrossoverOperator crossoverOperator, SelectionStrategy selectionStrategy) {
         this.problem = problem;
@@ -39,14 +42,29 @@ public class GeneticAlgorithm {
         this.selectionStrategy = selectionStrategy;
     }
 
+    public void setChart(GeneticAlgorithmChart chart)
+    {
+        this.chart = chart;
+    }
+
     public static void main(String[] args) {
         Loader loader = new Loader();
         Problem problem = null;
         try {
-            problem = loader.loadProblemData("C:\\Users\\Cinek\\Documents\\projektyJAVA\\ttp_problem_ga\\src\\main\\resources\\medium_0.ttp");
+            problem = loader.loadProblemData("C:\\Users\\Cinek\\Documents\\projektyJAVA\\ttp_problem_ga\\src\\main\\resources\\"+Config.FILE_NAME+".ttp");
             System.out.println("problem data loaded");
             GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(problem, new SwapMutation(), new PMXCrossover(), new RouletteSelectionStrategy());
+            GeneticAlgorithmChart geneticAlgorithmChart = new GeneticAlgorithmChart("GA", Config.FILE_NAME);
+            geneticAlgorithm.setChart(geneticAlgorithmChart);
+
+            geneticAlgorithmChart.pack( );
+            RefineryUtilities.centerFrameOnScreen( geneticAlgorithmChart );
+            geneticAlgorithmChart.setVisible( true );
+
+
             geneticAlgorithm.run();
+
+
 
 
 
@@ -66,8 +84,9 @@ public class GeneticAlgorithm {
 
         populations.add(population);
         evaluate(population, knapsackProblemSolution);
-
-        printPopulationResults(population);
+        PopulationResults populationResults = getPopulationResults(population);
+        printPopulationResults(populationResults);
+        updateChart(populationResults);
 
         for (int gen = 0; gen< GENERATIONS; gen++)
         {
@@ -95,10 +114,19 @@ public class GeneticAlgorithm {
             populations.add(newPopulation);
             population = newPopulation;
             evaluate(population, knapsackProblemSolution);
-            printPopulationResults(newPopulation);
+            populationResults = getPopulationResults(population);
+            printPopulationResults(populationResults);
+            updateChart(populationResults);
+
         }
 
 
+    }
+    private void updateChart(PopulationResults populationResults)
+    {
+        chart.getMax().add(populationResults.index, populationResults.max);
+        chart.getMin().add(populationResults.index, populationResults.min);
+        chart.getAvg().add(populationResults.index, populationResults.avg);
     }
 
     private boolean isSolutionRight(Solution solution)
@@ -111,16 +139,20 @@ public class GeneticAlgorithm {
         }
         return dimension==hashSet.size();
     }
-    private void printPopulationResults(Population population)
+    private void printPopulationResults(PopulationResults populationResults)
     {
-        System.out.println(String.format("Pop: %4d -- Max: %10f -- Min: %10f --  Avg: %10f", population.getIndex(), maxFitness(population),
-                minFitness( population ), avgFitness(population)));
+        System.out.println(String.format("Pop: %4d -- Max: %10f -- Min: %10f --  Avg: %10f", populationResults.index, populationResults.max,
+                populationResults.min
+                , populationResults.avg));
     }
 
-    public double maxFitness(Population population)
+    private PopulationResults getPopulationResults(Population population)
     {
+
         Solution solution0  = population.getSolutions().get(0);
         double maxFitness = solution0.getFitness();
+        double minFitness = solution0.getFitness();
+        double sum = solution0.getFitness();
         for (int i=1; i<population.getSolutions().size(); i++)
         {
             double fitness = population.getSolutions().get(i).getFitness();
@@ -128,38 +160,19 @@ public class GeneticAlgorithm {
             {
                 maxFitness = fitness;
             }
-
-        }
-
-        return  maxFitness;
-    }
-
-    public double minFitness(Population population)
-    {
-        Solution solution0  = population.getSolutions().get(0);
-        double minFitness = solution0.getFitness();
-        for (int i=1; i<population.getSolutions().size(); i++)
-        {
-            double fitness = population.getSolutions().get(i).getFitness();
             if (fitness<minFitness)
             {
                 minFitness = fitness;
             }
+            sum+= fitness;
 
         }
 
-        return  minFitness;
+        return  new PopulationResults(population.getIndex(), minFitness, maxFitness, sum/population.getSolutions().size());
+
     }
 
-    public double avgFitness(Population population)
-    {
-        double sum = 0;
-        for (Solution solution : population.getSolutions())
-        {
-            sum+= solution.getFitness();
-        }
-        return sum/population.getSolutions().size();
-    }
+
 
     public void evaluate(Population population, KnapsackProblemSolution knapsackProblemSolution)
     {
@@ -217,5 +230,20 @@ public class GeneticAlgorithm {
             knapsack.addItem(item);
         }
         return new KnapsackProblemSolution(knapsack.getItems());
+    }
+
+    static class PopulationResults
+    {
+        int index;
+        double min;
+        double max;
+        double avg;
+
+        public PopulationResults(int index, double min, double max, double avg) {
+            this.index = index;
+            this.min = min;
+            this.max = max;
+            this.avg = avg;
+        }
     }
 }
